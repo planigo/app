@@ -1,5 +1,5 @@
 import { axiosInstance } from "@/config/axios"
-import { Shop } from "@/models/shop.model"
+import { Shop, ShopCategory } from "@/models/shop.model"
 
 export const getShops = async (): Promise<Shop[]> => {
     try {
@@ -8,4 +8,31 @@ export const getShops = async (): Promise<Shop[]> => {
     } catch (error: any) {
         throw Error(error)
     }
-} 
+}
+
+export const getShopsByCategory = async (category: string): Promise<Shop[]> => {
+    try {
+        const { data } = await axiosInstance.get<Shop[]>(`/shops/category/${category}`)
+        return data
+    } catch (error: any) {
+        throw Error(error)
+    }
+}
+
+export const getShopById = async (shopId: string): Promise<Shop> => {
+    try {
+        const { data } = await axiosInstance.get<Shop>(`/shops/${shopId}`)
+        return data
+    } catch (error: any) {
+        throw Error(error)
+    }
+}
+
+export const getShopCategories = async (): Promise<ShopCategory[]> => {
+    try {
+        const { data } = await axiosInstance.get<ShopCategory[]>(`/categories`)
+        return data
+    } catch (error: any) {
+        throw Error(error)
+    }
+}
