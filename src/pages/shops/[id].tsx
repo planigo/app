@@ -1,4 +1,6 @@
 import React from 'react'
+import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetServerSideProps } from 'next/types'
 import { Shop } from '@/models/shop.model'
 import { getShopById } from '@/services/shop.service'
@@ -6,8 +8,7 @@ import { getServicesByShopId } from '@/services/service.service'
 import { Service } from '@/models/service.model'
 import { Hour } from '@/models/hour.model'
 import { getHoursByShopId } from '@/services/hour.service'
-import { getDayLabel } from '@/helpers/days.helper'
-
+import ShopHours from '@/components/hours/ShopHours'
 
 type ShopDetailsPageArgs = {
   shop: Shop
@@ -23,6 +24,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   return {
     props: {
+      ...(await serverSideTranslations('fr', [
+        'translations',
+      ])),
       shop,
       shopServices,
       shopHours
@@ -31,6 +35,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 }
 
 const ShopDetailsPage = ({ shop, shopServices, shopHours }: ShopDetailsPageArgs) => {
+  const { t } = useTranslation(['common', 'footer'])
+
   return <>
     <h2>Info Boutique</h2>
     <div>
@@ -51,17 +57,7 @@ const ShopDetailsPage = ({ shop, shopServices, shopHours }: ShopDetailsPageArgs)
         </div>
       ))}
     </div>
-    <h2>Les horaires</h2>
-    {shopHours.map(hour => (
-      <section key={hour.id}>
-        <p>{hour.id}</p>
-        <p>{hour.day} - {getDayLabel(hour.day)}</p>
-        <p>{hour.start}</p>
-        <p>{hour.end}</p>
-        <p>{hour.shopId}</p>
-      </section>
-    ))}
-
+    <ShopHours hours={shopHours}/>
   </>
 
 
