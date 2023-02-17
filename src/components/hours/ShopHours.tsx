@@ -17,7 +17,6 @@ const ShopHours = ({ hours }: ShopHoursProps) => {
         sx={{
           p: 1
         }}>
-        <h3>Les horaires d'ouverture</h3>
         {hours.map(hour =>
           <HourItem
             key={hour.id}
