@@ -40,8 +40,6 @@ export default function Home({ categories }: HomePageArgs) {
 
   const categoriesOptions = categories.map(category => ({ label: category.name, value: category.slug }))
 
-
-
   const onCategoryChange = (value: string) => {
     if (!value) return;
     setshopCategory(value)

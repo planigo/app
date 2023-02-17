@@ -1,9 +1,8 @@
 import React from 'react'
-import Link from 'next/link'
 import { GetServerSideProps } from 'next/types'
-import Button from '@mui/material/Button';
 import { getShopsByCategory } from '@/services/shop.service'
 import { Shop } from '@/models/shop.model'
+import ShopCardItem from '@/components/ShopCardItem'
 
 type SearchResultPageArgs = {
     shopsFilteredByCategory: Shop[]
@@ -23,19 +22,8 @@ const SearchResultPage = ({ shopsFilteredByCategory }: SearchResultPageArgs) => 
     return <div>
         {shopsFilteredByCategory
             ? shopsFilteredByCategory.map((shop: Shop) => (
-                <div key={shop.id}>
-                    <div>
-                        <p>{shop.id}</p>
-                        <p>{shop.name}</p>
-                        <p>{shop.description}</p>
-                    </div>
-                    <Link href={{
-                        pathname: '/shops/[id]',
-                        query: { id: shop.id }
-                    }}>
-                        <Button variant="outlined">Prendre Rendez-vous</Button>
-                    </Link>
-                </div>))
+                <ShopCardItem key={shop.id} shop={shop} />
+            ))
             : <p>Pas de Boutique</p>
         }
     </div>
