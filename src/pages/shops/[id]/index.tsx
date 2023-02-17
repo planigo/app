@@ -1,6 +1,4 @@
 import React from 'react'
-import { useTranslation } from 'next-i18next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetServerSideProps } from 'next/types'
 import { Shop } from '@/models/shop.model'
 import { getShopById } from '@/services/shop.service'
@@ -29,9 +27,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale, de
   const nextReservations = await getNextReservationSlots(shopId)
   return {
     props: {
-      // ...(await serverSideTranslations(locale || defaultLocale!, [
-      //   'common',
-      // ])),
       shop,
       shopServices,
       shopHours,

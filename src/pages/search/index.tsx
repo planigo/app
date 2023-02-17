@@ -3,7 +3,6 @@ import { GetServerSideProps } from 'next/types'
 import { getShopsByCategory } from '@/services/shop.service'
 import { Shop } from '@/models/shop.model'
 import ShopCardItem from '@/components/ShopCardItem'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 type SearchResultPageArgs = {
     shopsFilteredByCategory: Shop[]
@@ -14,9 +13,6 @@ export const getServerSideProps: GetServerSideProps<SearchResultPageArgs> = asyn
     const shopsFilteredByCategory = await getShopsByCategory(shopCategory)
     return {
         props: {
-            // ...(await serverSideTranslations('fr', [
-            //     'translations',
-            // ])),
             shopsFilteredByCategory
         }
     }
