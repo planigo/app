@@ -1,11 +1,12 @@
 import { getFormattedReservationDate } from '@/helpers/reservation.helper'
-import { Reservation, ReservationRequest } from '@/models/reservation.model'
+import { ReservationRequest } from '@/models/reservation.model'
 import { Service } from '@/models/service.model'
 import { makeReservation } from '@/services/reservation.service'
 import { getServiceById } from '@/services/service.service'
 import { useReservationStore } from '@/store/reservation.store'
 import { Paper, Button, Snackbar } from '@mui/material'
 import { GetServerSideProps } from 'next'
+import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 
 type ReservationPageProps = {
@@ -30,10 +31,10 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 }
 
 const ReservationPage = ({ shopId, service }: ReservationPageProps) => {
-  const [isServiceBooked, setIsServiceBooked] = useState<boolean>(true)
+  const router = useRouter()
+  const [isServiceBooked, setIsServiceBooked] = useState<boolean>(false)
   const nextAvailableReservation = useReservationStore((state) => state.nextAvailableReservation)
   const nextAvailableSlot = useReservationStore((state) => state.nextAvailableSlot)
-
 
   const reservationHandler = async ({ shopId, serviceId, start, userId }: ReservationRequest) => {
     const reservationDemand: ReservationRequest = {
@@ -44,6 +45,11 @@ const ReservationPage = ({ shopId, service }: ReservationPageProps) => {
     }
     await makeReservation(reservationDemand)
     setIsServiceBooked(true)
+  }
+
+  const onSnackbarClose = () => {
+    setIsServiceBooked(false)
+    router.replace('/')
   }
 
   return (
@@ -93,8 +99,9 @@ const ReservationPage = ({ shopId, service }: ReservationPageProps) => {
       </Button>
       <Snackbar
         open={isServiceBooked}
-        autoHideDuration={4000}
-        message="Réservation confirmée"
+        autoHideDuration={3000}
+        onClose={onSnackbarClose}
+        message="Réservation confirmée, vous allez être redirigé vers la page d'accueil"
       />
     </>
   )
