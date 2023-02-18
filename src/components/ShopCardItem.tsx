@@ -19,10 +19,12 @@ const ShopCardItem = ({ shop }: ShopCardProps) => {
                 }}>
                 <h3>{shop.name}</h3>
                 <p>{shop.description}</p>
-                <Link href={{
-                    pathname: '/shops/[id]',
-                    query: { id: shop.id }
-                }}>
+                <Link
+                    href={{
+                        pathname: '/shops/[id]',
+                        query: { id: shop.id }
+                    }
+                }>
                     <Button variant="outlined">Prendre Rendez-vous</Button>
                 </Link>
             </Paper>

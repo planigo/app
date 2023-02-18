@@ -21,3 +21,7 @@ export const getNextAvailableSlot = (slots: Slot[]): Slot | null => {
     }
     return nextAvailableSlot
 }
+
+export const getFormattedReservationDate = (nextReservationDate: string, slot: Slot): string => {
+    return `${nextReservationDate} à ${slot.start}`
+}

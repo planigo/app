@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { GetServerSideProps } from 'next/types'
 import { Shop } from '@/models/shop.model'
 import { getShopById } from '@/services/shop.service'
@@ -9,8 +9,9 @@ import { getHoursByShopId } from '@/services/hour.service'
 import ShopHours from '@/components/hours/ShopHours'
 import ServiceCardItem from '@/components/ServiceCardItem'
 import { getNextReservationSlots } from '@/services/reservation.service'
-import { getNextAvailableReservation, getNextAvailableSlot } from '@/helpers/reservation.helper';
+import { getNextAvailableReservation, getNextAvailableSlot, getFormattedReservationDate } from '@/helpers/reservation.helper';
 import { Reservation } from '@/models/reservation.model'
+import { useReservationStore } from '@/store/reservation.store'
 
 type ShopDetailsPageArgs = {
   shop: Shop
@@ -36,17 +37,20 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale, de
 }
 
 const ShopDetailsPage = ({ shop, shopServices, shopHours, nextReservations }: ShopDetailsPageArgs) => {
-  const getFormattedNextReservation = (nextReservations: Reservation[] = []): string => {
-    const nextReservation = getNextAvailableReservation(nextReservations)
-    if (!nextReservation) {
-      throw Error('should have reservation')
-    }
-    const nextAvailableSlot = getNextAvailableSlot(nextReservation.slots)
-    if (!nextAvailableSlot) {
-      throw Error('should have slot')
-    }
-    return `${nextReservation.date} à ${nextAvailableSlot?.start}`
+  const setNextAvailableReservation = useReservationStore((state) => state.setNextAvailableReservation)
+  const setNextAvailableSlot = useReservationStore((state) => state.setNextAvailableSlot)
+
+  const nextReservation = getNextAvailableReservation(nextReservations)
+  if (!nextReservation) {
+    throw Error('should have reservation')
   }
+  const nextAvailableSlot = getNextAvailableSlot(nextReservation.slots)
+  if (!nextAvailableSlot) {
+    throw Error('should have slot')
+  }
+
+  setNextAvailableReservation(nextReservation)
+  setNextAvailableSlot(nextAvailableSlot)
 
   return <>
     <h2>Info Boutique</h2>
@@ -61,7 +65,7 @@ const ShopDetailsPage = ({ shop, shopServices, shopHours, nextReservations }: Sh
           key={service.id}
           shopId={shop.id}
           service={service}
-          nextAvailableReservationSlot={getFormattedNextReservation(nextReservations)}
+          nextAvailableReservationSlot={getFormattedReservationDate(nextReservation.date, nextAvailableSlot)}
         />
       ))}
     </article>

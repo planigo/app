@@ -1,4 +1,3 @@
-import { getDayLabel } from '@/helpers/hour.helper'
 import { Hour } from '@/models/hour.model'
 import { Paper } from '@mui/material'
 import React from 'react'
@@ -20,7 +19,7 @@ const ShopHours = ({ hours }: ShopHoursProps) => {
         {hours.map(hour =>
           <HourItem
             key={hour.id}
-            day={getDayLabel(hour.day)}
+            day={hour.day}
             start={hour.start}
             end={hour.end} />
         )}
