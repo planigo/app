@@ -9,9 +9,10 @@ import { getHoursByShopId } from '@/services/hour.service'
 import ShopHours from '@/components/hours/ShopHours'
 import ServiceCardItem from '@/components/ServiceCardItem'
 import { getNextReservationSlots } from '@/services/reservation.service'
-import { getNextAvailableReservation, getNextAvailableSlot, getFormattedReservationDate } from '@/helpers/reservation.helper';
+import { getNextAvailableReservation, getNextAvailableSlot, getReservationDateHour } from '@/helpers/reservation.helper';
 import { Reservation } from '@/models/reservation.model'
 import { useReservationStore } from '@/store/reservation.store'
+import dayjs from 'dayjs'
 
 type ShopDetailsPageArgs = {
   shop: Shop
@@ -65,11 +66,11 @@ const ShopDetailsPage = ({ shop, shopServices, shopHours, nextReservations }: Sh
           key={service.id}
           shopId={shop.id}
           service={service}
-          nextAvailableReservationSlot={getFormattedReservationDate(nextReservation.date, nextAvailableSlot)}
+          nextAvailableReservationSlot={dayjs(getReservationDateHour(nextReservation.date, nextAvailableSlot.start)).format("dddd D MMMM YYYY [à] HH:mm:ss")}
         />
       ))}
     </article>
-    <h2>Les horaires d'ouverture</h2>
+    <h2>Les horaires</h2>
     <ShopHours hours={shopHours} />
   </>
 

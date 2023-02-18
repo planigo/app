@@ -2,7 +2,7 @@ import { Box } from '@mui/material'
 import React from 'react'
 
 type HourItemProps = {
-    day: number
+    day: string
     start: string
     end: string
 }

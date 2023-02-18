@@ -44,7 +44,6 @@ export default function Home({ categories }: HomePageArgs) {
     if (!value) return;
     setshopCategory(value)
   }
-
   return (
     <>
       <Head>
@@ -55,7 +54,6 @@ export default function Home({ categories }: HomePageArgs) {
       </Head>
       <Container>
         <SearchBox>
-
           <Autocomplete
             disablePortal
             options={categoriesOptions}
