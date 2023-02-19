@@ -13,6 +13,7 @@ import { getNextAvailableReservation, getNextAvailableSlot, getReservationDateHo
 import { Reservation } from '@/models/reservation.model'
 import { useReservationStore } from '@/store/reservation.store'
 import dayjs from 'dayjs'
+import { RESERVATION_DATE_FORMAT } from '@/config/dayjs'
 
 type ShopDetailsPageArgs = {
   shop: Shop
@@ -66,7 +67,7 @@ const ShopDetailsPage = ({ shop, shopServices, shopHours, nextReservations }: Sh
           key={service.id}
           shopId={shop.id}
           service={service}
-          nextAvailableReservationSlot={dayjs(getReservationDateHour(nextReservation.date, nextAvailableSlot.start)).format("dddd D MMMM YYYY [à] HH:mm:ss")}
+          nextAvailableReservationSlot={dayjs(getReservationDateHour(nextReservation.date, nextAvailableSlot.start)).format(RESERVATION_DATE_FORMAT)}
         />
       ))}
     </article>

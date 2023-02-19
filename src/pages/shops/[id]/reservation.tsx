@@ -1,10 +1,12 @@
-import { getFormattedReservationDate } from '@/helpers/reservation.helper'
+import { RESERVATION_DATE_FORMAT } from '@/config/dayjs'
+import { getReservationDateHour } from '@/helpers/reservation.helper'
 import { ReservationRequest } from '@/models/reservation.model'
 import { Service } from '@/models/service.model'
 import { makeReservation } from '@/services/reservation.service'
 import { getServiceById } from '@/services/service.service'
 import { useReservationStore } from '@/store/reservation.store'
 import { Paper, Button, Snackbar } from '@mui/material'
+import dayjs from 'dayjs'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
@@ -76,7 +78,8 @@ const ReservationPage = ({ shopId, service }: ReservationPageProps) => {
               sx={{
                 p: 1,
               }}>
-              <span>{getFormattedReservationDate(nextAvailableReservation.date, nextAvailableSlot)}</span>
+              <p>{dayjs(getReservationDateHour(nextAvailableReservation.date, nextAvailableSlot.start)).format(RESERVATION_DATE_FORMAT)}</p>
+              <p>Fin prévue à {dayjs(getReservationDateHour(nextAvailableReservation.date, nextAvailableSlot.start)).add(service.duration, "m").format("HH:mm")}</p>
             </Paper>
           </>
         }

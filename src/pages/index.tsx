@@ -9,8 +9,6 @@ import { getShopCategories } from '@/services/shop.service';
 import { ShopCategory } from '@/models/shop.model';
 
 
-const inter = Inter({ subsets: ['latin'] })
-
 const Container = styled.main`
   display: flex;
   height: 100vh;

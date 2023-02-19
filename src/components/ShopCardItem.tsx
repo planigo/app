@@ -24,11 +24,10 @@ const ShopCardItem = ({ shop }: ShopCardProps) => {
                         pathname: '/shops/[id]',
                         query: { id: shop.id }
                     }
-                }>
+                    }>
                     <Button variant="outlined">Prendre Rendez-vous</Button>
                 </Link>
             </Paper>
-
         </section>
     )
 }
