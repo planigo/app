@@ -12,11 +12,22 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = ['A Propos'];
+const settings = [
+    {
+        label: 'Profil',
+        path: "/users/profile"
+    },
+    {
+        label: 'Mes réservations',
+        path: "/users/my-reservations"
+    }];
 
 function ResponsiveAppBar() {
+    const router = useRouter()
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -24,6 +35,7 @@ function ResponsiveAppBar() {
         setAnchorElNav(event.currentTarget);
     };
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+
         setAnchorElUser(event.currentTarget);
     };
 
@@ -147,10 +159,12 @@ function ResponsiveAppBar() {
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
-                            {settings.map((setting) => (
-                                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                    <Typography textAlign="center">{setting}</Typography>
-                                </MenuItem>
+                            {settings.map((setting, index) => (
+                                <Link href={setting.path}>
+                                    <MenuItem key={index} onClick={handleCloseUserMenu}>
+                                        <Typography textAlign="center">{setting.label}</Typography>
+                                    </MenuItem>
+                                </Link>
                             ))}
                         </Menu>
                     </Box>

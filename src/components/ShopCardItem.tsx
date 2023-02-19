@@ -9,7 +9,7 @@ type ShopCardProps = {
 
 const ShopCardItem = ({ shop }: ShopCardProps) => {
     return (
-        <section>
+        <>
             <Paper
                 square={true}
                 elevation={3}
@@ -28,7 +28,7 @@ const ShopCardItem = ({ shop }: ShopCardProps) => {
                     <Button variant="outlined">Prendre Rendez-vous</Button>
                 </Link>
             </Paper>
-        </section>
+        </>
     )
 }
 

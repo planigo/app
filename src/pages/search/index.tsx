@@ -19,14 +19,14 @@ export const getServerSideProps: GetServerSideProps<SearchResultPageArgs> = asyn
 }
 
 const SearchResultPage = ({ shopsFilteredByCategory }: SearchResultPageArgs) => {
-    return <div>
+    return <>
         {shopsFilteredByCategory
             ? shopsFilteredByCategory.map((shop: Shop) => (
                 <ShopCardItem key={shop.id} shop={shop} />
             ))
             : <p>Pas de Boutique</p>
         }
-    </div>
+    </>
 }
 
 export default SearchResultPage
