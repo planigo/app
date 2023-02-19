@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { GetServerSideProps } from 'next/types'
 import { Shop } from '@/models/shop.model'
 import { getShopById } from '@/services/shop.service'

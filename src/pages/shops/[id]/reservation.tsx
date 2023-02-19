@@ -66,7 +66,7 @@ const ReservationPage = ({ shopId, service }: ReservationPageProps) => {
           <p>
             <strong>{service.name}</strong>
           </p>
-          <span>{service.duration} min - {service.price}€</span>
+          <span>{service.duration} min - {new Intl.NumberFormat('fr', { style: 'currency', currency: 'EUR' }).format(service.price)}</span>
         </Paper>
       </section>
       <section>
