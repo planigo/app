@@ -1,8 +1,9 @@
+import ReservationSlotsSchedule from '@/components/ReservationSlotsSchedule'
 import { RESERVATION_DATE_FORMAT } from '@/config/dayjs'
 import { getReservationDateHour } from '@/helpers/reservation.helper'
-import { ReservationRequest } from '@/models/reservation.model'
+import { Reservation, ReservationRequest } from '@/models/reservation.model'
 import { Service } from '@/models/service.model'
-import { makeReservation } from '@/services/reservation.service'
+import { getNextReservationSlots, makeReservation } from '@/services/reservation.service'
 import { getServiceById } from '@/services/service.service'
 import { useReservationStore } from '@/store/reservation.store'
 import { Paper, Button, Snackbar } from '@mui/material'
@@ -14,25 +15,31 @@ import React, { useState } from 'react'
 type ReservationPageProps = {
   shopId: string
   service: Service
+  nextReservationSlots: Reservation[]
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const shopId = query?.id
+  const shopId = query?.id as string
   const serviceId = query?.serviceId as string
   if (!serviceId)
     throw new Error(`Cannot get service`);
+  if (!shopId)
+    throw new Error("Shop does not exist");
 
   const service: Service = await getServiceById(serviceId)
+
+  const nextReservationSlots: Reservation[] = await getNextReservationSlots(shopId)
 
   return {
     props: {
       shopId,
-      service
+      service,
+      nextReservationSlots
     }
   }
 }
 
-const ReservationPage = ({ shopId, service }: ReservationPageProps) => {
+const ReservationPage = ({ shopId, service, nextReservationSlots }: ReservationPageProps) => {
   const router = useRouter()
   const [isServiceBooked, setIsServiceBooked] = useState<boolean>(false)
   const nextAvailableReservation = useReservationStore((state) => state.nextAvailableReservation)
@@ -77,10 +84,20 @@ const ReservationPage = ({ shopId, service }: ReservationPageProps) => {
               elevation={3}
               sx={{
                 p: 1,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between"
               }}>
-              <p>{dayjs(getReservationDateHour(nextAvailableReservation.date, nextAvailableSlot.start)).format(RESERVATION_DATE_FORMAT)}</p>
-              <p>Fin prévue à {dayjs(getReservationDateHour(nextAvailableReservation.date, nextAvailableSlot.start)).add(service.duration, "m").format("HH:mm")}</p>
+              <div>
+                <p>{dayjs(getReservationDateHour(nextAvailableReservation.date, nextAvailableSlot.start)).format(RESERVATION_DATE_FORMAT)}</p>
+                <p>Fin prévue à {dayjs(getReservationDateHour(nextAvailableReservation.date, nextAvailableSlot.start)).add(service.duration, "m").format("HH:mm")}</p>
+              </div>
+              <div>
+                <Button variant='outlined'>Choix du créneau</Button>
+              </div>
             </Paper>
+            <h3>Choix du créneau</h3>
+            <ReservationSlotsSchedule reservationSlots={nextReservationSlots} />
           </>
         }
       </section>
