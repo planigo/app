@@ -9,8 +9,11 @@ import { getHoursByShopId } from '@/services/hour.service'
 import ShopHours from '@/components/hours/ShopHours'
 import ServiceCardItem from '@/components/ServiceCardItem'
 import { getNextReservationSlots } from '@/services/reservation.service'
-import { getNextAvailableReservation, getNextAvailableSlot } from '@/helpers/reservation.helper';
+import { getNextAvailableReservation, getNextAvailableSlot, getReservationDateHour } from '@/helpers/reservation.helper';
 import { Reservation } from '@/models/reservation.model'
+import { useReservationStore } from '@/store/reservation.store'
+import dayjs from 'dayjs'
+import { RESERVATION_DATE_FORMAT } from '@/config/dayjs'
 
 type ShopDetailsPageArgs = {
   shop: Shop
@@ -36,17 +39,20 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale, de
 }
 
 const ShopDetailsPage = ({ shop, shopServices, shopHours, nextReservations }: ShopDetailsPageArgs) => {
-  const getFormattedNextReservation = (nextReservations: Reservation[] = []): string => {
-    const nextReservation = getNextAvailableReservation(nextReservations)
-    if (!nextReservation) {
-      throw Error('should have reservation')
-    }
-    const nextAvailableSlot = getNextAvailableSlot(nextReservation.slots)
-    if (!nextAvailableSlot) {
-      throw Error('should have slot')
-    }
-    return `${nextReservation.date} à ${nextAvailableSlot?.start}`
+  const setNextAvailableReservation = useReservationStore((state) => state.setNextAvailableReservation)
+  const setNextAvailableSlot = useReservationStore((state) => state.setNextAvailableSlot)
+
+  const nextReservation = getNextAvailableReservation(nextReservations)
+  if (!nextReservation) {
+    throw Error('should have reservation')
   }
+  const nextAvailableSlot = getNextAvailableSlot(nextReservation.slots)
+  if (!nextAvailableSlot) {
+    throw Error('should have slot')
+  }
+
+  setNextAvailableReservation(nextReservation)
+  setNextAvailableSlot(nextAvailableSlot)
 
   return <>
     <h2>Info Boutique</h2>
@@ -61,11 +67,11 @@ const ShopDetailsPage = ({ shop, shopServices, shopHours, nextReservations }: Sh
           key={service.id}
           shopId={shop.id}
           service={service}
-          nextAvailableReservationSlot={getFormattedNextReservation(nextReservations)}
+          nextAvailableReservationSlot={dayjs(getReservationDateHour(nextReservation.date, nextAvailableSlot.start)).format(RESERVATION_DATE_FORMAT)}
         />
       ))}
     </article>
-    <h2>Les horaires d'ouverture</h2>
+    <h2>Les horaires</h2>
     <ShopHours hours={shopHours} />
   </>
 
