@@ -17,3 +17,8 @@ export type ReservationRequest = {
     start: string
     userId: string
 }
+
+export type ReservationDate = {
+    date: string
+    slot: Slot
+}

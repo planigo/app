@@ -42,8 +42,15 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 const ReservationPage = ({ shopId, service, nextReservationSlots }: ReservationPageProps) => {
   const router = useRouter()
   const [isServiceBooked, setIsServiceBooked] = useState<boolean>(false)
-  const nextAvailableReservation = useReservationStore((state) => state.nextAvailableReservation)
-  const nextAvailableSlot = useReservationStore((state) => state.nextAvailableSlot)
+  const reservationDateChose = useReservationStore((state) => state.reservationDateChose)
+  const cleanReservationDateChose = useReservationStore((state) => state.cleanReservationDateChose)
+  const setIsReservationChosen = useReservationStore((state) => state.setIsReservationChosen)
+  const isReservationChosen = useReservationStore((state) => state.isReservationChosen)
+
+
+  const chooseReservationDate = () => {
+    setIsReservationChosen(false)
+  }
 
   const reservationHandler = async ({ shopId, serviceId, start, userId }: ReservationRequest) => {
     const reservationDemand: ReservationRequest = {
@@ -53,6 +60,9 @@ const ReservationPage = ({ shopId, service, nextReservationSlots }: ReservationP
       userId: "b43a2594-a669-11ed-b5c1-0242ac150002"
     }
     await makeReservation(reservationDemand)
+
+    setIsReservationChosen(false)
+    cleanReservationDateChose()
     setIsServiceBooked(true)
   }
 
@@ -76,53 +86,61 @@ const ReservationPage = ({ shopId, service, nextReservationSlots }: ReservationP
           <span>{service.duration} min - {new Intl.NumberFormat('fr', { style: 'currency', currency: 'EUR' }).format(service.price)}</span>
         </Paper>
       </section>
-      <section>
-        {(nextAvailableReservation && nextAvailableSlot) &&
-          <>
-            <h3>Date et heure</h3>
-            <Paper
-              elevation={3}
-              sx={{
-                p: 1,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between"
-              }}>
-              <div>
-                <p>{dayjs(getReservationDateHour(nextAvailableReservation.date, nextAvailableSlot.start)).format(RESERVATION_DATE_FORMAT)}</p>
-                <p>Fin prévue à {dayjs(getReservationDateHour(nextAvailableReservation.date, nextAvailableSlot.start)).add(service.duration, "m").format("HH:mm")}</p>
-              </div>
-              <div>
-                <Button variant='outlined'>Choix du créneau</Button>
-              </div>
-            </Paper>
+      {
+        isReservationChosen
+          ? <section>
+            {reservationDateChose &&
+              <>
+                <h3>Date et heure</h3>
+                <Paper
+                  elevation={3}
+                  sx={{
+                    p: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between"
+                  }}>
+                  <div>
+                    <p>{dayjs(getReservationDateHour(reservationDateChose.date, reservationDateChose.slot.start)).format(RESERVATION_DATE_FORMAT)}</p>
+                    <p>Fin prévue à {dayjs(getReservationDateHour(reservationDateChose.date, reservationDateChose.slot.start)).add(service.duration, "m").format("HH:mm")}</p>
+                  </div>
+                  <div>
+                    <Button onClick={chooseReservationDate} variant='outlined'>Choix du créneau</Button>
+                  </div>
+                </Paper>
+                <Button
+                  onClick={() => {
+                    reservationHandler({
+                      shopId,
+                      serviceId: service.id,
+                      start: `${reservationDateChose.date} ${reservationDateChose?.slot.start}`,
+                      userId: ""
+                    })
+                  }}
+                  variant="outlined"
+                  sx={{
+                    my: 4,
+                  }}
+                >
+                  Confirmer la réservation
+                </Button>
+                {/* <Snackbar
+                  open={isServiceBooked}
+                  autoHideDuration={3000}
+                  onClose={onSnackbarClose}
+                  message="Réservation confirmée, vous allez être redirigé vers la page d'accueil"
+                /> */}
+              </>
+            }
+          </section>
+          : <section>
             <h3>Choix du créneau</h3>
-            <ReservationSlotsSchedule reservationSlots={nextReservationSlots} />
-          </>
-        }
-      </section>
-      <Button
-        onClick={() => {
-          reservationHandler({
-            shopId,
-            serviceId: service.id,
-            start: `${nextAvailableReservation!.date} ${nextAvailableSlot!.start}`,
-            userId: ""
-          })
-        }}
-        variant="outlined"
-        sx={{
-          my: 4,
-        }}
-      >
-        Confirmer la réservation
-      </Button>
-      <Snackbar
-        open={isServiceBooked}
-        autoHideDuration={3000}
-        onClose={onSnackbarClose}
-        message="Réservation confirmée, vous allez être redirigé vers la page d'accueil"
-      />
+            {nextReservationSlots.length
+              ? <ReservationSlotsSchedule reservationSlots={nextReservationSlots} />
+              : <p>is loading...</p>
+            }
+          </section>
+      }
     </>
   )
 }
