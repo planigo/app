@@ -1,12 +1,18 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { Reservation, Slot } from '@/models/reservation.model'
+import { Reservation, ReservationDate, Slot } from '@/models/reservation.model'
 
 interface ReservationState {
     nextAvailableReservation: Reservation | null
     setNextAvailableReservation: (reservation: Reservation) => void
     nextAvailableSlot: Slot | null
     setNextAvailableSlot: (slot: Slot) => void
+    reservationDateChose: ReservationDate | null
+    setReservationDateChose: (reservationDate: ReservationDate) => void
+    cleanReservationDateChose: () => void
+    isReservationChosen: boolean
+    setIsReservationChosen: (value: boolean) => void
+
 }
 
 export const useReservationStore = create<ReservationState>()(
@@ -23,7 +29,24 @@ export const useReservationStore = create<ReservationState>()(
                 nextAvailableSlot: { ...nextSlot },
             }))
         },
-    }), { name: "next-reservation" })
+        reservationDateChose: null,
+        setReservationDateChose: (reservationDate: ReservationDate) => {
+            set((state) => ({
+                reservationDateChose: { ...reservationDate },
+            }))
+        },
+        cleanReservationDateChose: () => {
+            set((state) => ({
+                reservationDateChose: null,
+            }))
+        },
+        isReservationChosen: false,
+        setIsReservationChosen: (value: boolean) => {
+            set((state) => ({
+                isReservationChosen: value,
+            }))
+        },
+    }), { name: "reservation" })
 )
 
 
