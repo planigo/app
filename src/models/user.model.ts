@@ -3,7 +3,6 @@ export type User = {
     firstname: string
     lastname: string
     email: string
-    password: string
     role: 'admin' | 'customer' | 'owner'
     isEmailVerified: boolean
 }

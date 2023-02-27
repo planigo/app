@@ -12,7 +12,7 @@ export const getNextReservationSlots = async (shopId: string) => {
 
 export const makeReservation = async (reservationDemand: ReservationRequest) => {
     try {
-        await axiosInstance.post(`/reservation`, {...reservationDemand})
+        await axiosInstance.post(`/reservation`, { ...reservationDemand })
     } catch (error: any) {
         throw Error(error)
     }
@@ -21,7 +21,7 @@ export const makeReservation = async (reservationDemand: ReservationRequest) => 
 export const getReservationBookedByUser = async (userId: string) => {
     try {
         const { data } = await axiosInstance.get<BookedReservation[]>(`/reservation/slots/users/${userId}`)
-        return data
+        return data || []
     } catch (error: any) {
         throw Error(error)
     }
