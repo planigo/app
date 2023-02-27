@@ -22,3 +22,12 @@ export type ReservationDate = {
     date: string
     slot: Slot
 }
+
+export type BookedReservation = {
+    reservationId: string
+    shopName: string
+    serviceName: string
+    price: number
+    duration: number
+    start: string
+}

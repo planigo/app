@@ -124,12 +124,12 @@ const ReservationPage = ({ shopId, service, nextReservationSlots }: ReservationP
                 >
                   Confirmer la réservation
                 </Button>
-                {/* <Snackbar
+                <Snackbar
                   open={isServiceBooked}
                   autoHideDuration={3000}
                   onClose={onSnackbarClose}
                   message="Réservation confirmée, vous allez être redirigé vers la page d'accueil"
-                /> */}
+                />
               </>
             }
           </section>

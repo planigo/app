@@ -45,7 +45,7 @@ const ReservationSlotsSchedule = ({ reservationSlots }: ReservationSlotsSchedule
                     flexDirection: "column",
                     gap: 1
                 }}>
-                    <p>{dayjs(r.date).format(TEXTUAL_DATE_FORMAT)}</p>
+                    <p style={{ textAlign: "center" }}>{dayjs(r.date).format(TEXTUAL_DATE_FORMAT)}</p>
                     {r.slots
                         && r.slots.map((s: Slot) => (
                             // <Tooltip disableFocusListener={!s.isAvailable} disableTouchListener={!s.isAvailable} title="on verra ça plus tard">
@@ -65,7 +65,7 @@ const ReservationSlotsSchedule = ({ reservationSlots }: ReservationSlotsSchedule
                 </Box>
             </Box>
         ))}
-    </Paper>
+    </Paper >
 
 }
 

@@ -1,5 +1,5 @@
 import { axiosInstance } from "@/config/axios"
-import { Reservation, ReservationRequest } from "@/models/reservation.model"
+import { BookedReservation, Reservation, ReservationRequest } from "@/models/reservation.model"
 
 export const getNextReservationSlots = async (shopId: string) => {
     try {
@@ -13,6 +13,15 @@ export const getNextReservationSlots = async (shopId: string) => {
 export const makeReservation = async (reservationDemand: ReservationRequest) => {
     try {
         await axiosInstance.post(`/reservation`, {...reservationDemand})
+    } catch (error: any) {
+        throw Error(error)
+    }
+}
+
+export const getReservationBookedByUser = async (userId: string) => {
+    try {
+        const { data } = await axiosInstance.get<BookedReservation[]>(`/reservation/slots/users/${userId}`)
+        return data
     } catch (error: any) {
         throw Error(error)
     }
