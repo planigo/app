@@ -12,18 +12,18 @@ export const useUserStore = create<UserStore>()(
     persist(
       (set) => ({
         currentUser: {
-          id: "a248e8b8-b797-11ed-82c4-0242ac160002",
+          id: "0676cd6f-b82e-11ed-b521-0242ac150002",
           firstname: "Customer",
           lastname: "Client",
           email: "customer@gmail.com",
           role: "customer",
-          isEmailVerified: true,
+          isEmailVerified: true
         },
         setCurrentUser: (user: User) => {
-          console.log(user, "new user");
-        },
+          console.log(user, 'new user')
+        }
       }),
-      { name: "users" }
+      { name: 'users' }
     )
   )
 );

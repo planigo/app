@@ -5,13 +5,12 @@ import Grid from "@mui/material/Unstable_Grid2";
 import dayjs from "dayjs";
 import { User } from "@/models/user.model";
 import { useUserStore } from "@/store/user.store";
+import { BookedReservation } from "@/models/reservation.model";
 
 const UserReservationsPage = () => {
   const currentUser: User = useUserStore((state) => state.currentUser);
   const { data: bookedReservations, isLoading } =
     useGetReservationsBookedByUserQuery(currentUser.id);
-
-  console.log(bookedReservations);
 
   let content = <CircularProgress />;
 
@@ -22,7 +21,7 @@ const UserReservationsPage = () => {
   if (!isLoading && bookedReservations && bookedReservations.length > 0) {
     content = (
       <>
-        {bookedReservations.map((reservation) => (
+        {bookedReservations.map((reservation: BookedReservation) => (
           <Grid md={3} key={reservation.reservationId}>
             <Paper sx={{ p: 4, my: 2 }} key={reservation.reservationId}>
               <strong>
