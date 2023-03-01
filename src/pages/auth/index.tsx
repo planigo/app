@@ -19,7 +19,7 @@ const LoginPage = () => {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: unknown) => {
     console.log(data);
   };
   
