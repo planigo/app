@@ -105,3 +105,34 @@ a {
     color-scheme: dark;
   }
 } */
+
+#log-in-container h1{
+  text-align: center;
+  margin: 30px;
+}
+
+#log-in-container form{
+  margin: 30px auto;
+  width: 300px;
+  background-color: white;
+  box-shadow: 10px 10px 20px 0px rgba(0,0,0,0.5);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.log-in-input{
+  margin: 10px 0px;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+  background-color: #ffcccc;
+  width: fit-content;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+#log-in-button-submit {
+  margin-top: 10px;
+}
