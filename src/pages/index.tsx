@@ -1,33 +1,24 @@
-import { useState } from 'react'
-import Link from 'next/link';
-import Head from 'next/head'
-import { GetStaticProps } from 'next/types';
-import { Button, Autocomplete, TextField, Box } from '@mui/material';
-import { getShopCategories } from '@/services/shop.service';
-import { ShopCategory } from '@/models/shop.model';
+import { useState } from "react";
+import Link from "next/link";
+import Head from "next/head";
+import { Button, Autocomplete, TextField, Box, Alert } from "@mui/material";
+import { useGetShopsCategoriesQuery } from "@/services/shop.service";
 
-type HomePageArgs = {
-  categories: ShopCategory[]
-}
+export default function Home() {
+  const [shopCategory, setshopCategory] = useState<string>("barber");
 
-export const getStaticProps: GetStaticProps = async () => {
-  const categories = await getShopCategories()
+  const { isLoading, data: categories = [] } = useGetShopsCategoriesQuery();
 
-  return {
-    props: {
-      categories
-    },
-  }
-}
+  const categoriesOptions = categories.map((category) => ({
+    label: category.name,
+    value: category.slug,
+  }));
 
-export default function Home({ categories }: HomePageArgs) {
-  const [shopCategory, setshopCategory] = useState<string>('barber')
-
-  const categoriesOptions = categories.map(category => ({ label: category.name, value: category.slug }))
   const onCategoryChange = (value: string) => {
     if (!value) return;
-    setshopCategory(value)
-  }
+    setshopCategory(value);
+  };
+
   return (
     <>
       <Head>
@@ -36,14 +27,17 @@ export default function Home({ categories }: HomePageArgs) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Box sx={{
-        display: "flex",
-        height: "100vh",
-        gap: 4,
-        justifyContent: "center",
-        alignItems: "center",
-      }}>
+      <Box
+        sx={{
+          display: "flex",
+          height: "100vh",
+          gap: 4,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <Autocomplete
+          loading={isLoading}
           disablePortal
           options={categoriesOptions}
           getOptionLabel={(option) => option.label}
@@ -51,17 +45,23 @@ export default function Home({ categories }: HomePageArgs) {
             return option.value === newValue.value;
           }}
           sx={{ width: 300 }}
-          renderInput={(params) => <TextField {...params} label="Recherche par catégorie" />}
+          renderInput={(params) => (
+            <TextField {...params} label="Recherche par catégorie" />
+          )}
           onChange={(event, value) => onCategoryChange(value?.value || "")}
         />
 
-        <Link href={{
-          pathname: '/search',
-          query: { category: shopCategory },
-        }}>
-          <Button variant="outlined">Rechercher</Button>
+        <Link
+          href={{
+            pathname: "/search",
+            query: { category: shopCategory },
+          }}
+        >
+          <Button variant="outlined" disabled={isLoading}>
+            Rechercher
+          </Button>
         </Link>
       </Box>
     </>
-  )
+  );
 }
