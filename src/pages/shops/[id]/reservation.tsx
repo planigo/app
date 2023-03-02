@@ -9,7 +9,8 @@ import {
 } from "@/services/reservation.service";
 import { getServiceById } from "@/services/service.service";
 import { useReservationStore } from "@/store/reservation.store";
-import { Paper, Button, Snackbar } from "@mui/material";
+import { useUserStore } from "@/store/user.store";
+import { Paper, Button } from "@mui/material";
 import dayjs from "dayjs";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
@@ -76,20 +77,19 @@ const ReservationPage = ({
     (state) => state.isReservationChosen
   );
 
+  const currentUser = useUserStore((state) => state.currentUser);
+
   const chooseReservationDate = () => {
     setIsReservationChosen(false);
   };
 
   const { mutate: makeReservation } = useMakeReservationMutation(() => {
-    setIsReservationChosen(false);
-    cleanReservationDateChose();
-    setIsServiceBooked(true);
+    router.replace("/users/my-reservations");
   });
 
-  const onSnackbarClose = () => {
-    setIsServiceBooked(false);
-    router.replace("/");
-  };
+  if (!currentUser) {
+    return <div>Vous devez être connecté pour réserver un service</div>;
+  }
 
   return (
     <>
@@ -160,7 +160,7 @@ const ReservationPage = ({
                     shopId,
                     serviceId: service.id,
                     start: `${reservationDateChose.date} ${reservationDateChose?.slot.start}`,
-                    userId: "",
+                    userId: currentUser?.id,
                   })
                 }
                 variant="outlined"
@@ -170,12 +170,6 @@ const ReservationPage = ({
               >
                 Confirmer la réservation
               </Button>
-              <Snackbar
-                open={isServiceBooked}
-                autoHideDuration={3000}
-                onClose={onSnackbarClose}
-                message="Réservation confirmée, vous allez être redirigé vers la page d'accueil"
-              />
             </>
           )}
         </section>

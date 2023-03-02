@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -13,26 +13,30 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import Link from "next/link";
+import { useUserStore } from "@/store/user.store";
+import { removeToken } from "@/helpers/localstorage.helper";
 
-const pages = ["A Propos"];
+const pages = [""];
 const settings = [
-  {
-    label: "Profil",
-    path: "/users/profile",
-  },
   {
     label: "Mes réservations",
     path: "/users/my-reservations",
   },
+  {
+    label: "Déconnexion",
+    path: "#",
+    onClick: () => {
+      useUserStore.getState().setCurrentUser(null);
+      removeToken();
+    },
+  },
 ];
 
 function ResponsiveAppBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
-  );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  );
+  const currentUser = useUserStore((state) => state.currentUser);
+
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -122,40 +126,64 @@ function ResponsiveAppBar() {
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+          {currentUser ? (
+            <Box sx={{ flexGrow: 0 }}>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar
+                  alt="Remy Sharp"
+                  src="https://icon-library.com/images/default-user-icon/default-user-icon-20.jpg"
+                />
               </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting, index) => (
-                <Link href={setting.path} key={index}>
-                  <MenuItem onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting.label}</Typography>
-                  </MenuItem>
-                </Link>
-              ))}
-            </Menu>
-          </Box>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting, index) => (
+                  <Link href={setting.path} key={index}>
+                    <MenuItem
+                      onClick={() => {
+                        setting.onClick?.();
+                        handleCloseUserMenu();
+                      }}
+                    >
+                      <Typography textAlign="center">
+                        {setting.label}
+                      </Typography>
+                    </MenuItem>
+                  </Link>
+                ))}
+              </Menu>
+            </Box>
+          ) : (
+            <Box sx={{ flexGrow: 0 }}>
+              <Link href="/connexion">
+                <Button variant="outlined" sx={{ my: 2, color: "white" }}>
+                  Se connecter
+                </Button>
+              </Link>
+              <Link href="/inscription">
+                <Button variant="outlined" sx={{ my: 2, color: "white" }}>
+                  S&apos;enregister
+                </Button>
+              </Link>
+            </Box>
+          )}
         </Toolbar>
       </Container>
     </AppBar>
   );
 }
+
 export default ResponsiveAppBar;

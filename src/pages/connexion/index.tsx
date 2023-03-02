@@ -2,9 +2,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextField, Button, Box, CircularProgress, Alert } from "@mui/material";
-import { useLoginMutation, useMeQuery } from "@/services/auth.service";
+import { useLoginMutation } from "@/services/auth.service";
 import { Container } from "@mui/system";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useUserStore } from "@/store/user.store";
 
 const schema = z.object({
   email: z
@@ -18,8 +19,18 @@ const schema = z.object({
 export type FormLoginSchemaType = z.infer<typeof schema>;
 
 const LoginPage = () => {
-  const { mutate: login, isLoading, isError } = useLoginMutation();
-  const [trigger, setTrigger] = useState(false);
+  const router = useRouter();
+  const setCurrentUser = useUserStore((state) => state.setCurrentUser);
+
+  const {
+    mutate: login,
+    isLoading,
+    isError,
+  } = useLoginMutation((user) => {
+    router.push("/");
+    setCurrentUser(user);
+  });
+
   const {
     register,
     handleSubmit,
@@ -27,8 +38,6 @@ const LoginPage = () => {
   } = useForm<FormLoginSchemaType>({
     resolver: zodResolver(schema),
   });
-
-  useMeQuery(trigger);
 
   const onSubmit = (data: FormLoginSchemaType) => {
     login(data);
@@ -42,7 +51,6 @@ const LoginPage = () => {
         alignItems: "center",
       }}
     >
-      <button onClick={() => setTrigger(true)}>me</button>
       <h1>Se connecter</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box sx={{ display: "flex", flexDirection: "column" }}>

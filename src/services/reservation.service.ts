@@ -4,7 +4,7 @@ import {
   Reservation,
   ReservationRequest,
 } from "@/models/reservation.model";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 export const getNextReservationSlots = async (shopId: string) => {
   try {
@@ -26,7 +26,9 @@ export const useMakeReservationMutation = (onSuccess: () => void) =>
     onSuccess: () => onSuccess(),
   });
 
-export const useGetReservationsBookedByUserQuery = (userId: string) =>
+export const useGetReservationsBookedByUserQuery = (
+  userId: string | undefined
+) =>
   useQuery({
     queryKey: ["getReservationsBookedByUser", userId],
     queryFn: async () => {
@@ -36,5 +38,24 @@ export const useGetReservationsBookedByUserQuery = (userId: string) =>
 
       return data;
     },
+    enabled: !!userId,
     placeholderData: [],
   });
+
+export const useCancelReservationQuery = (
+  reservationId: string | undefined
+) => {
+  const queryClient = useQueryClient();
+
+  return useQuery({
+    queryKey: "cancelReservation",
+    queryFn: async () =>
+      await axiosInstance.get(`/reservation/cancel/${reservationId}`),
+    enabled: !!reservationId,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["getReservationsBookedByUser"],
+      });
+    },
+  });
+};
