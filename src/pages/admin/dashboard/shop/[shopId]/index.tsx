@@ -180,7 +180,7 @@ const AdminShopDetailsPage = ({ shopServices, reservations, shopHours, shopId }:
                     {hour.end}
                   </TableCell>
                   <TableCell>
-                    {hour.shopId}
+                    {hour.shop_id}
                   </TableCell>
                   <TableCell>
                     <Button>Modifier</Button>
