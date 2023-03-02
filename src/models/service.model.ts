@@ -4,5 +4,7 @@ export type Service = {
     description: string
     price: number
     duration: number
-    shopId: string
+    shop_id: string
 }
+
+export type ServiceCreate = Omit<Service, "id">
