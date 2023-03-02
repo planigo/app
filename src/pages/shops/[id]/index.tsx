@@ -1,4 +1,3 @@
-import React from "react";
 import { GetServerSideProps } from "next/types";
 import { Shop } from "@/models/shop.model";
 import { getShopById } from "@/services/shop.service";
@@ -7,7 +6,6 @@ import { Service } from "@/models/service.model";
 import { Hour } from "@/models/hour.model";
 import { getHoursByShopId } from "@/services/hour.service";
 import ShopHours from "@/components/hours/ShopHours";
-import dynamic from "next/dynamic";
 import { getNextReservationSlots } from "@/services/reservation.service";
 import {
   getNextAvailableReservation,
@@ -18,8 +16,7 @@ import { Reservation } from "@/models/reservation.model";
 import { useReservationStore } from "@/store/reservation.store";
 import dayjs from "dayjs";
 import { RESERVATION_DATE_FORMAT } from "@/config/dayjs";
-
-const ServiceCardItem = dynamic(() => import("@/components/ServiceCardItem"));
+import ServiceCardItem from "@/components/ServiceCardItem";
 
 type ShopDetailsPageArgs = {
   shop: Shop;
@@ -28,11 +25,7 @@ type ShopDetailsPageArgs = {
   nextReservations: Reservation[];
 };
 
-export const getServerSideProps: GetServerSideProps = async ({
-  query,
-  locale,
-  defaultLocale,
-}) => {
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const shopId = (query.id as string) || "";
   const shop: Shop = await getShopById(shopId);
   const shopServices: Service[] = await getServicesByShopId(shopId);

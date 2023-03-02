@@ -3,6 +3,7 @@ import { Service } from "@/models/service.model";
 import { Button, Paper, Tooltip } from "@mui/material";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import { useUserStore } from "@/store/user.store";
+import dynamic from "next/dynamic";
 
 type ServiceCardProps = {
   shopId: string;
@@ -47,7 +48,7 @@ export const ServiceCardItem = ({
           <p>Prochaine dispo le : {nextAvailableReservationSlot}</p>
           <Tooltip title={tooltipTitle}>
             <span>
-              <Button variant="outlined" disabled={!!currentUser}>
+              <Button variant="outlined" disabled={!!!currentUser}>
                 <Link
                   href={`/shops/${shopId}/reservation?serviceId=${service.id}`}
                 >
@@ -62,4 +63,6 @@ export const ServiceCardItem = ({
   );
 };
 
-export default ServiceCardItem;
+export default dynamic(() => Promise.resolve(ServiceCardItem), {
+  ssr: false,
+});
