@@ -14,6 +14,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 import Link from "next/link";
 import { useUserStore } from "@/store/user.store";
 import { removeToken } from "@/helpers/localstorage.helper";
+import { Avatar } from "@mui/material";
 
 const pages = [""];
 const settings = [
@@ -128,10 +129,7 @@ function ResponsiveAppBar() {
           {currentUser ? (
             <Box sx={{ flexGrow: 0 }}>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar
-                  alt="Remy Sharp"
-                  src="https://icon-library.com/images/default-user-icon/default-user-icon-20.jpg"
-                />
+                <Avatar src="https://icon-library.com/images/default-user-icon/default-user-icon-20.jpg" />
               </IconButton>
               <Menu
                 sx={{ mt: "45px" }}
