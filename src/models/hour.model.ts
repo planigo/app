@@ -4,5 +4,7 @@ export type Hour = {
     day: number
     start: string
     end: string
-    shopId: string
+    shop_id: string
 }
+
+export type CreateHour = Omit<Hour, "id">

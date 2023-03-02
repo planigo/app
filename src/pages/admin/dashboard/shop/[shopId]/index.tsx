@@ -1,4 +1,6 @@
+import HourModal from '@/components/backoffice/HourModal'
 import ServiceModal from '@/components/backoffice/ServiceModal'
+import { getWeekday } from '@/config/dayjs'
 import { Hour } from '@/models/hour.model'
 import { AdminDetailedReservation } from '@/models/reservation.model'
 import { Service } from '@/models/service.model'
@@ -33,11 +35,12 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   }
 }
 
-const AdminShopDetailsPage = ({ shopServices, reservations, shopId }: AdminShopDetailsProps) => {
+const AdminShopDetailsPage = ({ shopServices, reservations, shopHours, shopId }: AdminShopDetailsProps) => {
   const [isServiceModalOpen, setIsServiceModalOpen] = useState(false)
+  const [isHourModalOpen, setIsHourModalOpen] = useState(false)
 
   const navigateToServiceDetailsPage = (serviceId: string) => {
-    console.log('navigate to detail service')
+    console.log('navigate to detail service', serviceId)
   }
 
   const deleteService = (serviceId: string) => {
@@ -144,24 +147,59 @@ const AdminShopDetailsPage = ({ shopServices, reservations, shopId }: AdminShopD
         </Table>
       </TableContainer>
       <h2>Les horaires</h2>
+      <Button onClick={() => setIsHourModalOpen(true)}>Ajouter Horaire</Button>
       <TableContainer>
         <TableHead>
           <TableRow>
             <TableCell>Créneau ID</TableCell>
             <TableCell>Jour</TableCell>
-            <TableCell>Départ</TableCell>
+            <TableCell>Début</TableCell>
             <TableCell>Fin</TableCell>
             <TableCell>Shop ID</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-
+          {
+            shopHours.length
+              ? shopHours.map((hour) => (
+                <TableRow
+                  key={hour.id}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    {hour.id}
+                  </TableCell>
+                  <TableCell>
+                    {getWeekday(hour.day)}
+                  </TableCell>
+                  <TableCell>
+                    {hour.start}
+                  </TableCell>
+                  <TableCell>
+                    {hour.end}
+                  </TableCell>
+                  <TableCell>
+                    {hour.shopId}
+                  </TableCell>
+                  <TableCell>
+                    <Button>Modifier</Button>
+                    <Button>Supprimer</Button>
+                  </TableCell>
+                </TableRow>
+              ))
+              : <p>Pas de service</p>
+          }
         </TableBody>
       </TableContainer>
       <ServiceModal
         isModalOpen={isServiceModalOpen}
         setIsModalOpen={setIsServiceModalOpen}
+        shopId={shopId}
+      />
+      <HourModal
+        isModalOpen={isHourModalOpen}
+        setIsModalOpen={setIsHourModalOpen}
         shopId={shopId}
       />
     </>

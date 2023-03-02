@@ -1,5 +1,6 @@
 import { axiosInstance } from "@/config/axios";
-import { Hour } from "@/models/hour.model";
+import { CreateHour, Hour } from "@/models/hour.model";
+import { useMutation } from "react-query";
 
 export const getHoursByShopId = async (shopId: string): Promise<Hour[]> => {
   try {
@@ -9,3 +10,11 @@ export const getHoursByShopId = async (shopId: string): Promise<Hour[]> => {
     throw Error(error);
   }
 };
+
+
+export const useCreateHourMutation = (onSuccess: () => void) =>
+  useMutation({
+    mutationKey: "createHour",
+    mutationFn: (newHour: CreateHour) => axiosInstance.post(`/hours`, newHour),
+    onSuccess: () => onSuccess(),
+  });
