@@ -27,7 +27,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     props: {
       shopServices,
       reservations,
-      // shopHours,
+      shopHours,
       shopId
     }
   }
