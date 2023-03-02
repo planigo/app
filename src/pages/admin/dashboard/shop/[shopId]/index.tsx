@@ -23,7 +23,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const shopServices = await getServicesByShopId(shopId)
   const reservations = await getSlotsBookedFilteredByShop(shopId)
   const shopHours = await getHoursByShopId(shopId)
-  console.table(shopHours)
   return {
     props: {
       shopServices,
