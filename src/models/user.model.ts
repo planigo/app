@@ -6,3 +6,11 @@ export type User = {
     role: 'admin' | 'customer' | 'owner'
     isEmailVerified: boolean
 }
+
+export type UserPayload = {
+    "firstname": string,
+    "lastname": string,
+    "email": string,
+    "password": string,
+    "confirmPassword": string
+}
