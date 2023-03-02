@@ -26,7 +26,7 @@ const UserReservationsPage = () => {
   const [prestationToCancel, setPrestationToCancel] = useState("");
   const currentUser = useUserStore((state) => state.currentUser);
   const { data: bookedReservations, isLoading } =
-    useGetReservationsBookedByUserQuery(currentUser?.id);
+  useGetReservationsBookedByUserQuery(currentUser?.id);
 
   useCancelReservationQuery(prestationToCancel);
 

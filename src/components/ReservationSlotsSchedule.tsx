@@ -3,7 +3,7 @@ import React from "react";
 import dayjs from "dayjs";
 
 import dynamic from "next/dynamic";
-import { Box, Button, Paper, Tooltip } from "@mui/material";
+import { Box, Button, Paper } from "@mui/material";
 import { HOUR_MINUTES_FORMAT, TEXTUAL_DATE_FORMAT } from "@/config/dayjs";
 import { getReservationDateHour } from "@/helpers/reservation.helper";
 import { useReservationStore } from "@/store/reservation.store";
@@ -18,6 +18,7 @@ const ReservationSlotsSchedule = ({
   const setReservationDateChose = useReservationStore(
     (state) => state.setReservationDateChose
   );
+  
   const setIsReservationChosen = useReservationStore(
     (state) => state.setIsReservationChosen
   );
@@ -59,7 +60,6 @@ const ReservationSlotsSchedule = ({
             </p>
             {r.slots &&
               r.slots.map((s) => (
-                // <Tooltip disableFocusListener={!s.isAvailable} disableTouchListener={!s.isAvailable} title="on verra ça plus tard">
                 <Button
                   onClick={() => chooseReservationHour(r.date, s)}
                   disabled={!s.isAvailable}
@@ -72,7 +72,6 @@ const ReservationSlotsSchedule = ({
                     HOUR_MINUTES_FORMAT
                   )}
                 </Button>
-                // </Tooltip>
               ))}
           </Box>
         </Box>

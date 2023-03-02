@@ -11,3 +11,5 @@ export type ShopCategory = {
     slug: string
     name: string
 }
+
+export type ShopRequest = Omit<Shop, "id">
