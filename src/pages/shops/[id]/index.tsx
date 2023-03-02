@@ -7,7 +7,7 @@ import { Service } from "@/models/service.model";
 import { Hour } from "@/models/hour.model";
 import { getHoursByShopId } from "@/services/hour.service";
 import ShopHours from "@/components/hours/ShopHours";
-import ServiceCardItem from "@/components/ServiceCardItem";
+import dynamic from "next/dynamic";
 import { getNextReservationSlots } from "@/services/reservation.service";
 import {
   getNextAvailableReservation,
@@ -18,6 +18,8 @@ import { Reservation } from "@/models/reservation.model";
 import { useReservationStore } from "@/store/reservation.store";
 import dayjs from "dayjs";
 import { RESERVATION_DATE_FORMAT } from "@/config/dayjs";
+
+const ServiceCardItem = dynamic(() => import("@/components/ServiceCardItem"));
 
 type ShopDetailsPageArgs = {
   shop: Shop;
