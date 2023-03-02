@@ -37,37 +37,36 @@ export const useMakeReservationMutation = (onSuccess: () => void) =>
     });
 
 export const useGetReservationsBookedByUserQuery = (
-  userId: string | undefined
+    userId: string | undefined
 ) =>
-  useQuery({
-    queryKey: ["getReservationsBookedByUser", userId],
-    queryFn: async () => {
-      const { data } = await axiosInstance.get<BookedReservation[]>(
-        `/reservation/slots/users/${userId}`
-      );
+    useQuery({
+        queryKey: ["getReservationsBookedByUser", userId],
+        queryFn: async () => {
+            const { data } = await axiosInstance.get<BookedReservation[]>(
+                `/reservation/slots/users/${userId}`
+            );
 
-      return data;
-    },
-    enabled: !!userId,
-    placeholderData: [],
-  });
+            return data;
+        },
+        enabled: !!userId,
+        placeholderData: [],
+    });
 
 export const useCancelReservationQuery = (
-  reservationId: string | undefined
+    reservationId: string | undefined
 ) => {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  return useQuery({
-    queryKey: "cancelReservation",
-    queryFn: async () =>
-      await axiosInstance.get(`/reservation/cancel/${reservationId}`),
-    enabled: !!reservationId,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["getReservationsBookedByUser"],
-      });
-    },
-  });
+    return useQuery({
+        queryKey: "cancelReservation",
+        queryFn: () => axiosInstance.get(`/reservation/cancel/${reservationId}`),
+        enabled: !!reservationId,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["getReservationsBookedByUser"],
+            });
+        },
+    });
 };
 
 // Backoffice
