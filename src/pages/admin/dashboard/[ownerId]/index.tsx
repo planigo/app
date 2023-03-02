@@ -26,7 +26,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
 const AdminDashboardPage = ({ ownerId, ownerShops }: AdminDashboardProps) => {
     const router = useRouter()
-    const [isShopModalOpen, setIsShopModalOpen] = useState<boolean>(false)
+    const [isShopModalOpen, setIsShopModalOpen] = useState(false)
     const navigateToShopDetailsPage = (shopId: string) => {
         router.push({
             pathname: '/admin/dashboard/shop/[shopId]',
