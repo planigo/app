@@ -54,7 +54,6 @@ const ServiceModal = ({ isModalOpen, setIsModalOpen, shopId }: ServiceModalProps
 
         createService(newService)
 
-        //createShop(newShop)
     };
 
 
