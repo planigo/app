@@ -31,3 +31,14 @@ export type BookedReservation = {
     duration: number
     start: string
 }
+
+export type AdminDetailedReservation = {
+    reservationId: string
+    start: string
+    firstname: string
+    lastname: string
+    serviceName: string
+    duration: number
+    price: number
+    isCancelled: boolean
+}

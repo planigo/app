@@ -9,7 +9,7 @@ export default function Home() {
 
   const { isLoading, data: categories = [] } = useGetShopsCategoriesQuery();
 
-  const categoriesOptions = categories.map((category) => ({
+  const categoriesOptions = categories.map(category => ({
     label: category.name,
     value: category.slug,
   }));
@@ -27,15 +27,13 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Box
-        sx={{
-          display: "flex",
-          height: "100vh",
-          gap: 4,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <Box sx={{
+        display: "flex",
+        height: "80vh",
+        gap: 4,
+        justifyContent: "center",
+        alignItems: "center",
+      }}>
         <Autocomplete
           loading={isLoading}
           disablePortal
@@ -50,7 +48,6 @@ export default function Home() {
           )}
           onChange={(event, value) => onCategoryChange(value?.value || "")}
         />
-
         <Link
           href={{
             pathname: "/search",
@@ -61,6 +58,12 @@ export default function Home() {
             Rechercher
           </Button>
         </Link>
+      </Box>
+      <Box sx={{
+        textAlign: "right",
+        p: 2
+      }}>
+        <i>Hosted by Nico</i>
       </Box>
     </>
   );
