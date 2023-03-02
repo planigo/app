@@ -30,7 +30,7 @@ const LoginPage = () => {
         <TextField id="standard-basic" className="log-in-input" label="Email" variant="standard"
          type="text" {...register("email")} />
         {errors.email?.message && <p className='error-message'>{errors.email?.message as string}</p>}
-        <TextField id="standard-basic" className="log-in-input" label="Password" variant="standard"
+        <TextField id="standard-basic" className="log-in-input" label="Mot de passe" variant="standard"
          type="password" {...register("password")} />
         {errors.password?.message && <p className='error-message'>{errors.password?.message as string}</p>}
         <Button variant="outlined" type="submit" id="log-in-button-submit">Submit</Button>
