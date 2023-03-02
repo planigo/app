@@ -87,7 +87,7 @@ const LoginPage = () => {
             id="log-in-button-submit"
             disabled={isLoading}
           >
-            {isLoading ? <CircularProgress size={25} /> : "Submit"}
+            {isLoading ? <CircularProgress size={25} /> : "Valider"}
           </Button>
         </Box>
       </form>
