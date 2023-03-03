@@ -5,6 +5,7 @@ import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Butto
 import ShopModal from '@/components/backoffice/ShopModal';
 import dynamic from 'next/dynamic';
 import { useUserStore } from '@/store/user.store';
+import router from 'next/router';
 
 type AdminDashboardProps = {
     ownerId: string
