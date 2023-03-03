@@ -14,6 +14,10 @@ import Register from "./Register";
 
 const settings = [
   {
+    label: "Backoffice",
+    path: "/admin/dashboard",
+  },
+  {
     label: "Mes réservations",
     path: "/users/my-reservations",
   },
@@ -37,17 +41,17 @@ function ResponsiveAppBar() {
   const textColor =
     router.pathname === "/"
       ? {
-          color: "white",
-          "&:hover": {
-            color: "#E6E6E6",
-          },
-        }
+        color: "white",
+        "&:hover": {
+          color: "#E6E6E6",
+        },
+      }
       : {
-          color: "black",
-          "&:hover": {
-            color: "#2D2E2E",
-          },
-        };
+        color: "black",
+        "&:hover": {
+          color: "#2D2E2E",
+        },
+      };
 
   return (
     <AppBar

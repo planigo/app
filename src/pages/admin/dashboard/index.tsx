@@ -1,43 +1,34 @@
 import { Shop } from '@/models/shop.model'
-import { getShopsByOwnerId, useGetShopsCategoriesQuery } from '@/services/shop.service'
-import { GetServerSideProps } from 'next/types'
+import { useGetShopsByOwnerId, useGetShopsCategoriesQuery } from '@/services/shop.service'
 import React, { useState } from 'react'
 import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Button, Box } from '@mui/material';
-import { useRouter } from 'next/router';
 import ShopModal from '@/components/backoffice/ShopModal';
+import dynamic from 'next/dynamic';
+import { useUserStore } from '@/store/user.store';
 
 type AdminDashboardProps = {
     ownerId: string
     ownerShops: Shop[]
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-    const ownerId: string = query.ownerId as string
-    const ownerShops = await getShopsByOwnerId(ownerId)
+const AdminDashboardPage = ({ ownerId }: AdminDashboardProps) => {
+    const currentUser = useUserStore((state) => state.currentUser);
 
-    return {
-        props: {
-            ownerId,
-            ownerShops
-        }
-    }
-}
-
-
-const AdminDashboardPage = ({ ownerId, ownerShops }: AdminDashboardProps) => {
-    const router = useRouter()
     const [isShopModalOpen, setIsShopModalOpen] = useState(false)
+
     const navigateToShopDetailsPage = (shopId: string) => {
         router.push({
             pathname: '/admin/dashboard/shop/[shopId]',
             query: { shopId }
         })
     }
+
     const deleteShop = (shopId: string) => {
         console.log('delete shop', shopId)
     }
 
-    const { isLoading, data: categories = [] } = useGetShopsCategoriesQuery();
+    const { isLoading: isCategoryLoading, data: categories = [] } = useGetShopsCategoriesQuery();
+    const { isLoading: isShopLoading, data: ownerShops = [] } = useGetShopsByOwnerId(currentUser?.id);
 
     const categoriesOptions = categories.map(category => ({
         label: category.name,
@@ -50,7 +41,7 @@ const AdminDashboardPage = ({ ownerId, ownerShops }: AdminDashboardProps) => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: "space-between",
-                my: 2
+                mt: 10,
             }}>
                 <h2>Mes boutiques</h2>
                 <Button onClick={() => setIsShopModalOpen(true)}>Ajouter une boutique</Button>
@@ -68,7 +59,8 @@ const AdminDashboardPage = ({ ownerId, ownerShops }: AdminDashboardProps) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {ownerShops.map((shop) => (
+                        {(!isShopLoading && ownerShops
+                        ) ? ownerShops.map((shop) => (
                             <TableRow
                                 key={shop.id}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -87,12 +79,14 @@ const AdminDashboardPage = ({ ownerId, ownerShops }: AdminDashboardProps) => {
                                     <Button onClick={() => deleteShop(shop.id)}>Supprimer</Button>
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        ))
+                            : <p>Pas de boutique</p>
+                        }
                     </TableBody>
                 </Table>
             </TableContainer>
             <ShopModal
-                isLoading={isLoading}
+                isLoading={isCategoryLoading}
                 categoriesOptions={categoriesOptions}
                 isModalOpen={isShopModalOpen}
                 setIsShopModalOpen={setIsShopModalOpen}
@@ -102,4 +96,6 @@ const AdminDashboardPage = ({ ownerId, ownerShops }: AdminDashboardProps) => {
     )
 }
 
-export default AdminDashboardPage
+export default dynamic(() => Promise.resolve(AdminDashboardPage), {
+    ssr: false,
+});

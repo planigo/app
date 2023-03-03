@@ -10,8 +10,8 @@ import { getServicesByShopId } from '@/services/service.service'
 import { formatPrice } from '@/utils/format.utils'
 import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Button } from '@mui/material'
 import { GetServerSideProps } from 'next'
-import { useRouter } from 'next/router'
 import React, { useState } from 'react'
+import dynamic from 'next/dynamic'
 
 type AdminShopDetailsProps = {
   shopServices: Service[]
@@ -206,4 +206,6 @@ const AdminShopDetailsPage = ({ shopServices, reservations, shopHours, shopId }:
   )
 }
 
-export default AdminShopDetailsPage
+export default dynamic(() => Promise.resolve(AdminShopDetailsPage), {
+  ssr: false,
+});

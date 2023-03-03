@@ -23,16 +23,6 @@ export const getShopsByCategory = async (category: string): Promise<Shop[]> => {
   }
 };
 
-export const getShopsByOwnerId = async (ownerId: string): Promise<Shop[]> => {
-  try {
-    const { data } = await axiosInstance.get<Shop[]>(`/shops/owner/${ownerId}`)
-    return data || []
-  } catch (error) {
-    console.error(error)
-    return []
-  }
-}
-
 export const getShopById = async (shopId: string): Promise<Shop> => {
   try {
     const { data } = await axiosInstance.get<Shop>(`/shops/${shopId}`);
@@ -53,6 +43,16 @@ export const useGetShopsCategoriesQuery = () =>
       const { data } = await axiosInstance.get<ShopCategory[]>(`/categories`);
       return data;
     },
+  });
+
+export const useGetShopsByOwnerId = (ownerId: string | undefined) =>
+  useQuery({
+    queryKey: ["ownerShop", ownerId],
+    queryFn: async () => {
+      const { data } = await axiosInstance.get<Shop[]>(`/shops/owner/${ownerId}`);
+      return data;
+    },
+    enabled: !!ownerId,
   });
 
 export const useCreateShopMutation = (onSuccess: () => void) =>

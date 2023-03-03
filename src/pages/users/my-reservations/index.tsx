@@ -48,7 +48,7 @@ const UserReservationsPage = () => {
     content = <>Vous n&apos;avez pas encore réservé de prestation</>;
   }
 
-  if (!isLoading && bookedReservations && bookedReservations.length > 0) {
+  if (!isLoading && bookedReservations) {
     content = (
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
