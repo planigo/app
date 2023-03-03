@@ -1,7 +1,7 @@
+import { FormLoginSchemaType } from "@/components/Login";
 import { axiosInstance } from "@/config/axios";
 import { setToken } from "@/helpers/localstorage.helper";
 import { User } from "@/models/user.model";
-import { FormLoginSchemaType } from "@/pages/connexion";
 import { useMutation, useQuery } from "react-query";
 
 export const useLoginMutation = (onSuccess: (user: User) => void) =>

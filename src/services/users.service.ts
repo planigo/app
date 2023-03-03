@@ -1,6 +1,6 @@
+import { FormRegisterSchemaType } from "@/components/Register";
 import { axiosInstance } from "@/config/axios";
 import { User } from "@/models/user.model";
-import { FormRegisterSchemaType } from "@/pages/inscription";
 import { useMutation } from "react-query";
 
 export const getUsers = async (): Promise<User[]> => {
