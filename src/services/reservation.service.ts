@@ -70,12 +70,19 @@ export const useCancelReservationQuery = (
 };
 
 // Backoffice
+export const useGetSlotsBookedFilteredByShopQuery = (
+    shopId: string | undefined
+) =>
+    useQuery({
+        queryKey: ["getSlotsBookedFilteredByShop", shopId],
+        queryFn: async () => {
+            const { data } = await axiosInstance.get<AdminDetailedReservation[]>(
+                `/reservation/slots/shop/${shopId}`
+            );
+            return data;
+        },
+        enabled: !!shopId,
+    });
 
-export const getSlotsBookedFilteredByShop = async (shopId: string) => {
-    try {
-        const { data } = await axiosInstance.get<AdminDetailedReservation[]>(`/reservation/slots/shop/${shopId}`)
-        return data || []
-    } catch (error: any) {
-        throw Error(error)
-    }
-}
+
+

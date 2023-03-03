@@ -23,7 +23,7 @@ const settings = [
   },
   {
     label: "Déconnexion",
-    path: "#",
+    path: "/",
     onClick: () => {
       useUserStore.getState().setCurrentUser(null);
       removeToken();

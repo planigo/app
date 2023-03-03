@@ -42,7 +42,13 @@ const UserReservationsPage = () => {
   const { isLoading: isCancelReservationLoading } =
     useCancelReservationQuery(prestationToCancel);
 
-  let content = <CircularProgress />;
+  let content = <Container>
+    Pas de reservation
+  </Container>;
+
+  if (isLoading) {
+    content = <CircularProgress />
+  }
 
   if (!isLoading && bookedReservations?.length === 0) {
     content = <>Vous n&apos;avez pas encore réservé de prestation</>;

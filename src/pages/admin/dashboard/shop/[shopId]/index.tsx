@@ -1,43 +1,23 @@
 import HourModal from '@/components/backoffice/HourModal'
 import ServiceModal from '@/components/backoffice/ServiceModal'
 import { getWeekday } from '@/config/dayjs'
-import { Hour } from '@/models/hour.model'
-import { AdminDetailedReservation } from '@/models/reservation.model'
-import { Service } from '@/models/service.model'
-import { getHoursByShopId } from '@/services/hour.service'
-import { getSlotsBookedFilteredByShop } from '@/services/reservation.service'
-import { getServicesByShopId } from '@/services/service.service'
+import { useGetServicesByShopIdQuery } from '@/services/service.service'
 import { formatPrice } from '@/utils/format.utils'
-import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Button } from '@mui/material'
-import { GetServerSideProps } from 'next'
+import { Box, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Button } from '@mui/material'
 import React, { useState } from 'react'
-import dynamic from 'next/dynamic'
+import { useRouter } from 'next/router'
+import { useGetSlotsBookedFilteredByShopQuery } from '@/services/reservation.service'
+import { useGetHoursByShopIdQuery } from '@/services/hour.service'
 
-type AdminShopDetailsProps = {
-  shopServices: Service[]
-  reservations: AdminDetailedReservation[]
-  shopHours: Hour[]
-  shopId: string
-}
-
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const shopId: string = query.shopId as string
-  const shopServices = await getServicesByShopId(shopId)
-  const reservations = await getSlotsBookedFilteredByShop(shopId)
-  const shopHours = await getHoursByShopId(shopId)
-  return {
-    props: {
-      shopServices,
-      reservations,
-      shopHours,
-      shopId
-    }
-  }
-}
-
-const AdminShopDetailsPage = ({ shopServices, reservations, shopHours, shopId }: AdminShopDetailsProps) => {
+const AdminShopDetailsPage = () => {
+  const router = useRouter()
+  const shopId = router.query.shopId as string
   const [isServiceModalOpen, setIsServiceModalOpen] = useState(false)
   const [isHourModalOpen, setIsHourModalOpen] = useState(false)
+
+  const { data: reservations, isLoading: isReservationLoading } = useGetSlotsBookedFilteredByShopQuery(shopId)
+  const { data: shopServices, isLoading: isShopServicesLoading } = useGetServicesByShopIdQuery(shopId)
+  const { data: shopHours, isLoading: isShopHoursLoading } = useGetHoursByShopIdQuery(shopId)
 
   const navigateToServiceDetailsPage = (serviceId: string) => {
     console.log('navigate to detail service', serviceId)
@@ -48,7 +28,7 @@ const AdminShopDetailsPage = ({ shopServices, reservations, shopHours, shopId }:
   }
 
   return (
-    <>
+    <Box sx={{ mt: 10 }}>
       <h2>Les prestations</h2>
       <Button onClick={() => setIsServiceModalOpen(true)}>Ajouter une prestation</Button>
       <TableContainer>
@@ -65,7 +45,7 @@ const AdminShopDetailsPage = ({ shopServices, reservations, shopHours, shopId }:
           </TableHead>
           <TableBody>
             {
-              shopServices.length
+              (!isShopServicesLoading && shopServices)
                 ? shopServices.map((service) => (
                   <TableRow
                     key={service.id}
@@ -112,7 +92,7 @@ const AdminShopDetailsPage = ({ shopServices, reservations, shopHours, shopId }:
             </TableRow>
           </TableHead>
           <TableBody>
-            {reservations.length
+            {(!isReservationLoading && reservations)
               ? reservations.map((reservation) => (
                 <TableRow
                   key={reservation.reservationId}
@@ -161,7 +141,7 @@ const AdminShopDetailsPage = ({ shopServices, reservations, shopHours, shopId }:
         </TableHead>
         <TableBody>
           {
-            shopHours.length
+            (!isShopHoursLoading && shopHours)
               ? shopHours.map((hour) => (
                 <TableRow
                   key={hour.id}
@@ -202,10 +182,8 @@ const AdminShopDetailsPage = ({ shopServices, reservations, shopHours, shopId }:
         setIsModalOpen={setIsHourModalOpen}
         shopId={shopId}
       />
-    </>
+    </Box>
   )
 }
 
-export default dynamic(() => Promise.resolve(AdminShopDetailsPage), {
-  ssr: false,
-});
+export default AdminShopDetailsPage
