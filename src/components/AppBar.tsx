@@ -6,7 +6,7 @@ import Container from "@mui/material/Container";
 import Link from "next/link";
 import { useUserStore } from "@/store/user.store";
 import { removeToken } from "@/helpers/localstorage.helper";
-import { useRouter } from "next/router";
+import { Router, useRouter } from "next/router";
 import { useState } from "react";
 import { Modal, Snackbar } from "@mui/material";
 import Login from "./Login";
@@ -24,7 +24,7 @@ const settings = [
   },
   {
     label: "Déconnexion",
-    path: "#",
+    path: "/",
     onClick: () => {
       useUserStore.getState().setCurrentUser(null);
       removeToken();
