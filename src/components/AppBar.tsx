@@ -16,6 +16,7 @@ const settings = [
   {
     label: "Backoffice",
     path: "/admin/dashboard",
+    role: "owner",
   },
   {
     label: "Mes réservations",
@@ -41,17 +42,17 @@ function ResponsiveAppBar() {
   const textColor =
     router.pathname === "/"
       ? {
-        color: "white",
-        "&:hover": {
-          color: "#E6E6E6",
-        },
-      }
+          color: "white",
+          "&:hover": {
+            color: "#E6E6E6",
+          },
+        }
       : {
-        color: "black",
-        "&:hover": {
-          color: "#2D2E2E",
-        },
-      };
+          color: "black",
+          "&:hover": {
+            color: "#2D2E2E",
+          },
+        };
 
   return (
     <AppBar
@@ -91,19 +92,24 @@ function ResponsiveAppBar() {
             }}
           >
             {currentUser ? (
-              settings.map((setting, index) => (
-                <Link
-                  href={setting.path}
-                  key={index}
-                  onClick={() => {
-                    setting.onClick?.();
-                  }}
-                >
-                  <Typography textAlign="center" sx={textColor}>
-                    {setting.label}
-                  </Typography>
-                </Link>
-              ))
+              settings.map((setting, index) => {
+                if (setting.role && setting.role !== currentUser.role) {
+                  return null;
+                }
+                return (
+                  <Link
+                    href={setting.path}
+                    key={index}
+                    onClick={() => {
+                      setting.onClick?.();
+                    }}
+                  >
+                    <Typography textAlign="center" sx={textColor}>
+                      {setting.label}
+                    </Typography>
+                  </Link>
+                );
+              })
             ) : (
               <>
                 <Link
