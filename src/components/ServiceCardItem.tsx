@@ -1,6 +1,14 @@
 import Link from "next/link";
 import { Service } from "@/models/service.model";
-import { Button, Paper, Tooltip } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Paper,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import { useUserStore } from "@/store/user.store";
 import dynamic from "next/dynamic";
@@ -24,42 +32,45 @@ export const ServiceCardItem = ({
   }
 
   return (
-    <section>
-      <Paper
-        square={true}
-        elevation={3}
-        sx={{
-          p: 1,
-          my: 4,
-        }}
-      >
-        <h3>{service.name}</h3>
-        <p>{service.description}</p>
-        <p>
+    <Card sx={{ minWidth: 275 }}>
+      <CardContent>
+        <Typography variant="h5" gutterBottom component="div">
+          {service.name}
+        </Typography>
+        <Typography variant="body2">{service.description}</Typography>
+        <Typography variant="body2">
           {new Intl.NumberFormat("fr", {
             style: "currency",
             currency: "EUR",
           }).format(service.price)}
-        </p>
-        <p>
+        </Typography>
+        <Typography
+          variant="body2"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
           <AccessTimeOutlinedIcon /> {service.duration} min
-        </p>
-        <div>
-          <p>Prochaine dispo le : {nextAvailableReservationSlot}</p>
-          <Tooltip title={tooltipTitle}>
-            <span>
-              <Button variant="outlined" disabled={!!!currentUser}>
-                <Link
-                  href={`/shops/${shopId}/reservation?serviceId=${service.id}`}
-                >
-                  Réserver
-                </Link>
-              </Button>
-            </span>
-          </Tooltip>
-        </div>
-      </Paper>
-    </section>
+        </Typography>
+        <Typography variant="body2">
+          Prochaine dispo le : {nextAvailableReservationSlot}
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Tooltip title={tooltipTitle}>
+          <span>
+            <Button variant="outlined" disabled={!!!currentUser}>
+              <Link
+                href={`/shops/${shopId}/reservation?serviceId=${service.id}`}
+              >
+                Réserver
+              </Link>
+            </Button>
+          </span>
+        </Tooltip>
+      </CardActions>
+    </Card>
   );
 };
 

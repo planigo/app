@@ -17,6 +17,7 @@ import { useReservationStore } from "@/store/reservation.store";
 import dayjs from "dayjs";
 import { RESERVATION_DATE_FORMAT } from "@/config/dayjs";
 import ServiceCardItem from "@/components/ServiceCardItem";
+import { Box } from "@mui/material";
 
 type ShopDetailsPageArgs = {
   shop: Shop;
@@ -68,14 +69,24 @@ const ShopDetailsPage = ({
   setNextAvailableSlot(nextAvailableSlot);
 
   return (
-    <>
-      <h2>Info Boutique</h2>
+    <Box
+      sx={{
+        marginTop: 10,
+        paddingBottom: 2,
+      }}
+    >
+      <h2>{shop.name}</h2>
       <div>
-        <p>{shop.name}</p>
         <p>{shop.description}</p>
       </div>
-      <h2>Choix des prestations</h2>
-      <article>
+      <h4>Choix des prestations</h4>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          flexWrap: "wrap",
+        }}
+      >
         {shopServices.map((service) => (
           <ServiceCardItem
             key={service.id}
@@ -89,10 +100,10 @@ const ShopDetailsPage = ({
             ).format(RESERVATION_DATE_FORMAT)}
           />
         ))}
-      </article>
+      </Box>
       <h2>Les horaires</h2>
       <ShopHours hours={shopHours} />
-    </>
+    </Box>
   );
 };
 

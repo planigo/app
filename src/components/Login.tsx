@@ -6,6 +6,9 @@ import { useLoginMutation } from "@/services/auth.service";
 import { Container } from "@mui/system";
 import { useRouter } from "next/router";
 import { useUserStore } from "@/store/user.store";
+import { Poppins } from "@next/font/google";
+
+const poppins = Poppins({ weight: "400", subsets: ["latin"] });
 
 const schema = z.object({
   email: z
@@ -18,8 +21,7 @@ const schema = z.object({
 
 export type FormLoginSchemaType = z.infer<typeof schema>;
 
-const LoginPage = () => {
-  const router = useRouter();
+const Login = ({ closeModal }: { closeModal: () => void }) => {
   const setCurrentUser = useUserStore((state) => state.setCurrentUser);
 
   const {
@@ -27,7 +29,7 @@ const LoginPage = () => {
     isLoading,
     isError,
   } = useLoginMutation((user) => {
-    router.push("/");
+    closeModal();
     setCurrentUser(user);
   });
 
@@ -50,10 +52,18 @@ const LoginPage = () => {
         flexDirection: "column",
         alignItems: "center",
       }}
+      className={poppins.className}
     >
-      <h1>Se connecter</h1>
+      <h1>Connexion</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            width: 300,
+            height: 250,
+          }}
+        >
           {isError && (
             <Alert severity="error">
               La combinaison n&apos;est pas correcte
@@ -95,4 +105,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default Login;

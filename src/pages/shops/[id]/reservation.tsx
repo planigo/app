@@ -10,7 +10,7 @@ import {
 import { getServiceById } from "@/services/service.service";
 import { useReservationStore } from "@/store/reservation.store";
 import { useUserStore } from "@/store/user.store";
-import { Paper, Button } from "@mui/material";
+import { Paper, Button, Box } from "@mui/material";
 import dayjs from "dayjs";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
@@ -92,7 +92,11 @@ const ReservationPage = ({
   }
 
   return (
-    <>
+    <Box
+      sx={{
+        marginTop: 10,
+      }}
+    >
       <section>
         <h3>Prestation</h3>
         <Paper
@@ -179,7 +183,7 @@ const ReservationPage = ({
           <ReservationSlotsSchedule reservationSlots={nextReservationSlots} />
         </section>
       )}
-    </>
+    </Box>
   );
 };
 

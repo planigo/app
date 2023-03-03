@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'zanna';
+  src: url('/fonts/zanna.otf');
+}
+
 :root {
   --max-width: 1100px;
   --border-radius: 12px;

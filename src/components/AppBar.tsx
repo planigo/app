@@ -1,22 +1,17 @@
-import React, { useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import Link from "next/link";
 import { useUserStore } from "@/store/user.store";
 import { removeToken } from "@/helpers/localstorage.helper";
-import { Avatar } from "@mui/material";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { Modal, Snackbar } from "@mui/material";
+import Login from "./Login";
+import Register from "./Register";
 
-const pages = [""];
 const settings = [
   {
     label: "Mes réservations",
@@ -33,151 +28,134 @@ const settings = [
 ];
 
 function ResponsiveAppBar() {
+  const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [modalContent, setModalContent] = useState<JSX.Element>();
   const currentUser = useUserStore((state) => state.currentUser);
 
-  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+  const textColor =
+    router.pathname === "/"
+      ? {
+          color: "white",
+          "&:hover": {
+            color: "#E6E6E6",
+          },
+        }
+      : {
+          color: "black",
+          "&:hover": {
+            color: "#2D2E2E",
+          },
+        };
 
   return (
-    <AppBar position="static">
+    <AppBar
+      color="transparent"
+      sx={{
+        boxShadow: "none",
+      }}
+    >
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+        <Toolbar
+          disableGutters
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Link href="/">
+            <Typography
               sx={{
-                display: { xs: "block", md: "none" },
+                fontFamily: `zanna`,
+                ...textColor,
+                fontSize: "1.3rem",
+                letterSpacing: "0.15rem",
               }}
             >
-              {pages.map((page, index) => (
-                <MenuItem key={index} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href=""
+              PLANIGO
+            </Typography>
+          </Link>
+          <Box
             sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
+              flexGrow: 0,
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "row",
+              color: "white",
+              gap: 2,
             }}
           >
-            LOGO
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page, index) => (
-              <Button
-                key={index}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
+            {currentUser ? (
+              settings.map((setting, index) => (
+                <Link
+                  href={setting.path}
+                  key={index}
+                  onClick={() => {
+                    setting.onClick?.();
+                  }}
+                >
+                  <Typography textAlign="center" sx={textColor}>
+                    {setting.label}
+                  </Typography>
+                </Link>
+              ))
+            ) : (
+              <>
+                <Link
+                  href="#"
+                  onClick={() => {
+                    setIsModalOpen((prev) => !prev);
+                    setModalContent(
+                      <Login closeModal={() => setIsModalOpen(false)} />
+                    );
+                  }}
+                >
+                  <Typography textAlign="center" sx={textColor}>
+                    Se connecter
+                  </Typography>
+                </Link>
+                <Link
+                  href="#"
+                  onClick={() => {
+                    setIsModalOpen((prev) => !prev);
+                    setModalContent(
+                      <Register
+                        closeModal={() => setIsModalOpen(false)}
+                        openSnackbar={() => setSnackbarOpen(true)}
+                      />
+                    );
+                  }}
+                >
+                  <Typography textAlign="center" sx={textColor}>
+                    S&apos;enregister
+                  </Typography>
+                </Link>
+              </>
+            )}
           </Box>
-
-          {currentUser ? (
-            <Box sx={{ flexGrow: 0 }}>
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar src="https://icon-library.com/images/default-user-icon/default-user-icon-20.jpg" />
-              </IconButton>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting, index) => (
-                  <Link href={setting.path} key={index}>
-                    <MenuItem
-                      onClick={() => {
-                        setting.onClick?.();
-                        handleCloseUserMenu();
-                      }}
-                    >
-                      <Typography textAlign="center">
-                        {setting.label}
-                      </Typography>
-                    </MenuItem>
-                  </Link>
-                ))}
-              </Menu>
-            </Box>
-          ) : (
-            <Box sx={{ flexGrow: 0 }}>
-              <Link href="/connexion">
-                <Button variant="outlined" sx={{ my: 2, color: "white" }}>
-                  Se connecter
-                </Button>
-              </Link>
-              <Link href="/inscription">
-                <Button variant="outlined" sx={{ my: 2, color: "white" }}>
-                  S&apos;enregister
-                </Button>
-              </Link>
-            </Box>
-          )}
         </Toolbar>
+        <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 400,
+              bgcolor: "background.paper",
+              borderRadius: 1,
+              padding: 2,
+            }}
+          >
+            {modalContent}
+          </Box>
+        </Modal>
+        <Snackbar
+          open={snackbarOpen}
+          onClose={() => setSnackbarOpen(false)}
+          message="🎉 Votre inscription a bien été prise en compte, veuillez vous connecter."
+        />
       </Container>
     </AppBar>
   );

@@ -11,6 +11,9 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { useCreateCustomerMutation } from "@/services/users.service";
+import { Poppins } from "@next/font/google";
+
+const poppins = Poppins({ weight: "400", subsets: ["latin"] });
 
 const schema = z
   .object({
@@ -35,8 +38,13 @@ const schema = z
   });
 
 export type FormRegisterSchemaType = z.infer<typeof schema>;
-
-const SigninPage = () => {
+const Register = ({
+  closeModal,
+  openSnackbar,
+}: {
+  closeModal: () => void;
+  openSnackbar: () => void;
+}) => {
   const {
     register,
     handleSubmit,
@@ -50,7 +58,10 @@ const SigninPage = () => {
     isError,
     isLoading,
   } = useCreateCustomerMutation({
-    onSuccess: () => router.push("/connexion"),
+    onSuccess: () => {
+      openSnackbar();
+      closeModal();
+    },
   });
 
   const onSubmit = (data: FormRegisterSchemaType) => {
@@ -64,10 +75,11 @@ const SigninPage = () => {
         flexDirection: "column",
         alignItems: "center",
       }}
+      className={poppins.className}
     >
-      <h1>S&apos;inscrire</h1>
+      <h1>Inscription</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", width: 300 }}>
           {isError && (
             <Alert severity="error">L&apos;email est déjà utilisée</Alert>
           )}
@@ -140,4 +152,4 @@ const SigninPage = () => {
   );
 };
 
-export default SigninPage;
+export default Register;

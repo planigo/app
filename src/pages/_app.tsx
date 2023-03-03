@@ -2,10 +2,10 @@ import "@/styles/globals.css";
 import "@/config/dayjs";
 import type { AppProps } from "next/app";
 import { Poppins } from "@next/font/google";
-import Container from "@mui/material/Container";
 import dynamic from "next/dynamic";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { Container } from "@mui/system";
 
 const AppBar = dynamic(() => import("@/components/AppBar"), { ssr: false });
 
@@ -14,13 +14,13 @@ const queryClient = new QueryClient();
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AppBar />
-      <Container className={poppins.className}>
+    <Container maxWidth={false} className={poppins.className}>
+      <QueryClientProvider client={queryClient}>
+        <AppBar />
         <Component {...pageProps} />
-      </Container>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </Container>
   );
 };
 
