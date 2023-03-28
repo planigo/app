@@ -6,3 +6,4 @@ export type User = {
   role: "admin" | "customer" | "owner";
   isEmailVerified: boolean;
 };
+ 
