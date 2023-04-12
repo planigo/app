@@ -8,9 +8,15 @@
     "start": "next start"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@mui/material": "^5.11.16",
     "next": "13.2.4",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-query": "^3.39.3",
+    "@planigo/core": "workspace:^1.0.0",
+    "@planigo/adapters": "workspace:^1.0.0"
   },
   "devDependencies": {
     "@types/react": "18.0.30",
