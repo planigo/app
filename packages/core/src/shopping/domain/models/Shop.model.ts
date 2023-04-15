@@ -6,7 +6,7 @@ export type Shop = {
     category_id: string
 }
 
-// VALUE OBJECT
+// VALUE OBJECT ???
 export type ShopCategory = {
     id: string
     slug: string
