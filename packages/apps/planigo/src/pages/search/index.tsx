@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import { Box, CircularProgress } from "@mui/material";
 import { shoppingService } from "../../services/Shopping.service";
 import { Shop } from "@planigo/core/lib/shopping/domain/models/Shop.model";
-import ShopCardItem from "../../components/ShopCardItem";
+import ShopCardItem from "../../components/shop/ShopCardItem";
 
 const SearchResultPage = () => {
     const router = useRouter()
