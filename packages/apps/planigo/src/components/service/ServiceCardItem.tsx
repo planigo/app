@@ -6,13 +6,13 @@ import {
   Card,
   CardActions,
   CardContent,
-  Paper,
   Tooltip,
   Typography,
 } from "@mui/material";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
-// import { useUserStore } from "@/store/user.store";
+
 import { Service } from "@planigo/core/lib/shopping/domain/models/Service.model";
+import { useUserStore } from "../../store/user.store";
 
 type ServiceCardProps = {
   shopId: string;
@@ -25,12 +25,12 @@ export const ServiceCardItem = ({
   service,
   nextAvailableReservationSlot,
 }: ServiceCardProps) => {
-  // const currentUser = useUserStore((state) => state.currentUser);
+  const currentUser = useUserStore((state) => state.currentUser);
   let tooltipTitle = "Vous devez être connecté pour réserver un créneau";
 
-  // if (currentUser) {
-  //   tooltipTitle = "";
-  // }
+  if (currentUser) {
+    tooltipTitle = "";
+  }
 
   return (
     <Card sx={{ minWidth: 275 }}>
@@ -61,13 +61,13 @@ export const ServiceCardItem = ({
       <CardActions>
         <Tooltip title={tooltipTitle}>
           <span>
-            {/* <Button variant="outlined" disabled={!!!currentUser}>
+            <Button variant="outlined" disabled={!!!currentUser}>
               <Link
                 href={`/shops/${shopId}/reservation?serviceId=${service.id}`}
               >
                 Réserver
               </Link>
-            </Button> */}
+            </Button>
           </span>
         </Tooltip>
       </CardActions>
