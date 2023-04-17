@@ -32,11 +32,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     const shopHours: Hour[] = await GetShopHours.execute(shoppingService, { shopId });
     const nextShopReservations = await GetNextReservations.execute(reservationService, { shopId });
 
-    console.log(shop)
-    console.log(shopServices)
-    console.log(shopHours)
-    console.log(nextShopReservations)
-
     return {
         props: {
             shop,
@@ -94,17 +89,18 @@ const ShopDetailsPage = ({
                 }}
             >
                 {shopServices.map((service) => (
-                    <ServiceCardItem
-                        key={service.id}
-                        shopId={shop.id}
-                        service={service}
+                    <p>{service.id}</p>
+                    // <ServiceCardItem
+                    //     key={service.id}
+                    //     shopId={shop.id}
+                    //     service={service}
                     //   nextAvailableReservationSlot={dayjs(
                     //     getReservationDateHour(
                     //       nextReservation.date,
                     //       nextAvailableSlot.start
                     //     )
                     //   ).format(RESERVATION_DATE_FORMAT)}
-                    />
+                    // />
                 ))}
             </Box>
             <h2>Les horaires</h2>

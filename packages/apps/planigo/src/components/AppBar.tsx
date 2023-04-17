@@ -5,12 +5,12 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "next/link";
 import { useUserStore } from "../store/user.store";
-// import { removeToken } from "@/helpers/localstorage.helper";
 import { Router, useRouter } from "next/router";
 import { useState } from "react";
 import { Modal, Snackbar } from "@mui/material";
 import Login from "./Login";
-//import Register from "./Register";
+import { useLocalStorage } from "@planigo/adapters/lib/storage/Localstorage";
+import Register from "./Register";
 
 const settings = [
   {
@@ -27,7 +27,7 @@ const settings = [
     path: "/",
     onClick: () => {
       useUserStore.getState().setCurrentUser(null);
-      // removeToken();
+      useLocalStorage().removeToken()
     },
   },
 ];
@@ -38,7 +38,6 @@ function ResponsiveAppBar() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [modalContent, setModalContent] = useState<JSX.Element>();
   const currentUser = useUserStore((state) => state.currentUser);
-
   const textColor =
     router.pathname === "/"
       ? {
@@ -129,12 +128,12 @@ function ResponsiveAppBar() {
                   href="#"
                   onClick={() => {
                     setIsModalOpen((prev) => !prev);
-                    // setModalContent(
-                    //   <Register
-                    //     closeModal={() => setIsModalOpen(false)}
-                    //     openSnackbar={() => setSnackbarOpen(true)}
-                    //   />
-                    // );
+                    setModalContent(
+                      <Register
+                        closeModal={() => setIsModalOpen(false)}
+                        openSnackbar={() => setSnackbarOpen(true)}
+                      />
+                    );
                   }}
                 >
                   <Typography textAlign="center" sx={textColor}>
