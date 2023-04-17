@@ -1,0 +1,32 @@
+{
+  "name": "planigo",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@hookform/resolvers": "^3.1.0",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/material": "^5.11.16",
+    "@mui/x-date-pickers": "^5.0.20",
+    "@planigo/adapters": "workspace:^1.0.0",
+    "@planigo/core": "workspace:^1.0.0",
+    "dayjs": "^1.11.7",
+    "next": "13.2.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-hook-form": "^7.43.9",
+    "react-query": "^3.39.3",
+    "zod": "^3.21.4",
+    "zustand": "^4.3.7"
+  },
+  "devDependencies": {
+    "@types/react": "18.0.30",
+    "typescript": "5.0.2"
+  }
+}
